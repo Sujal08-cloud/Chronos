@@ -9,12 +9,14 @@ class DailyAgendaList extends StatelessWidget {
   final List<TodoModel> todos;
   final ValueChanged<TodoModel> onTapTodo;
   final void Function(TodoModel todo, bool? value) onToggleTodo;
+  final ValueChanged<TodoModel> onViewDetail;
 
   const DailyAgendaList({
     super.key,
     required this.todos,
     required this.onTapTodo,
     required this.onToggleTodo,
+    required this.onViewDetail,
   });
 
   @override
@@ -46,6 +48,7 @@ class DailyAgendaList extends StatelessWidget {
           todo: todo,
           onTap: () => onTapTodo(todo),
           onToggle: (value) => onToggleTodo(todo, value),
+          onViewDetail: () => onViewDetail(todo),
         );
       },
     );

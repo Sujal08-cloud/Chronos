@@ -1,20 +1,22 @@
-import 'package:chronos/features/todo/domain/reccurrence_type.dart';
 import 'package:flutter/material.dart';
 import '../../../../core/constants/app_colors.dart';
 import '../../../../core/constants/app_sizes.dart';
 import '../../../../core/utils/date_time_helper.dart';
+import '../../domain/reccurrence_type.dart';
 import '../../domain/todo_model.dart';
 
 class TodoTile extends StatelessWidget {
   final TodoModel todo;
   final VoidCallback onTap;
   final ValueChanged<bool?> onToggle;
+  final VoidCallback onViewDetail;
 
   const TodoTile({
     super.key,
     required this.todo,
     required this.onTap,
     required this.onToggle,
+    required this.onViewDetail,
   });
 
   Color get _priorityColor {
@@ -26,6 +28,29 @@ class TodoTile extends StatelessWidget {
       case TaskPriority.high:
         return AppColors.priorityHigh;
     }
+  }
+
+  bool get _isOverdue {
+    final now = DateTime.now();
+    final deadline = todo.scheduledTime ?? todo.scheduledDate;
+    return deadline.isBefore(now);
+  }
+
+  Widget _buildStatusIcon() {
+    if (todo.isCompleted) {
+      return const Icon(Icons.check_circle_rounded, color: AppColors.success, size: 26);
+    }
+    if (todo.incompleteReason != null && todo.incompleteReason!.isNotEmpty) {
+      return const Icon(Icons.cancel_rounded, color: AppColors.error, size: 26);
+    }
+    if (_isOverdue) {
+      return Container(
+        width: 16,
+        height: 16,
+        decoration: const BoxDecoration(color: AppColors.warning, shape: BoxShape.circle),
+      );
+    }
+    return const Icon(Icons.radio_button_unchecked_rounded, color: AppColors.divider, size: 26);
   }
 
   @override
@@ -41,7 +66,8 @@ class TodoTile extends StatelessWidget {
             children: [
               Container(width: 4, height: 40, color: _priorityColor),
               const SizedBox(width: AppSizes.paddingMd),
-              Checkbox(value: todo.isCompleted, onChanged: onToggle),
+              _buildStatusIcon(),
+              const SizedBox(width: AppSizes.paddingMd),
               Expanded(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -89,7 +115,24 @@ class TodoTile extends StatelessWidget {
                   ],
                 ),
               ),
-              const Icon(Icons.chevron_right_rounded, color: AppColors.textSecondary),
+              PopupMenuButton<String>(
+                icon: const Icon(Icons.more_vert_rounded, color: AppColors.textSecondary),
+                onSelected: (value) {
+                  if (value == 'detail') onViewDetail();
+                },
+                itemBuilder: (context) => [
+                  const PopupMenuItem(
+                    value: 'detail',
+                    child: Row(
+                      children: [
+                        Icon(Icons.info_outline_rounded, size: 18),
+                        SizedBox(width: 8),
+                        Text('View Details'),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
             ],
           ),
         ),

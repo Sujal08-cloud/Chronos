@@ -1,6 +1,5 @@
-import 'package:chronos/features/todo/domain/reccurrence_type.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-
+import 'reccurrence_type.dart';
 
 class TodoModel {
   final String id;
@@ -15,6 +14,7 @@ class TodoModel {
   final RecurrenceType recurrenceType;
   final bool hasAlarm;
   final bool isCompleted;
+  final String? incompleteReason;
   final DateTime createdAt;
 
   TodoModel({
@@ -30,6 +30,7 @@ class TodoModel {
     required this.recurrenceType,
     required this.hasAlarm,
     required this.isCompleted,
+    this.incompleteReason,
     required this.createdAt,
   });
 
@@ -49,6 +50,7 @@ class TodoModel {
       recurrenceType: RecurrenceType.fromString(map['recurrenceType'] as String? ?? 'none'),
       hasAlarm: map['hasAlarm'] as bool? ?? false,
       isCompleted: map['isCompleted'] as bool? ?? false,
+      incompleteReason: map['incompleteReason'] as String?,
       createdAt: (map['createdAt'] as Timestamp).toDate(),
     );
   }
@@ -66,6 +68,7 @@ class TodoModel {
       'recurrenceType': recurrenceType.name,
       'hasAlarm': hasAlarm,
       'isCompleted': isCompleted,
+      'incompleteReason': incompleteReason,
       'createdAt': Timestamp.fromDate(createdAt),
     };
   }
@@ -81,6 +84,7 @@ class TodoModel {
     RecurrenceType? recurrenceType,
     bool? hasAlarm,
     bool? isCompleted,
+    String? incompleteReason,
   }) {
     return TodoModel(
       id: id,
@@ -95,6 +99,7 @@ class TodoModel {
       recurrenceType: recurrenceType ?? this.recurrenceType,
       hasAlarm: hasAlarm ?? this.hasAlarm,
       isCompleted: isCompleted ?? this.isCompleted,
+      incompleteReason: incompleteReason ?? this.incompleteReason,
       createdAt: createdAt,
     );
   }

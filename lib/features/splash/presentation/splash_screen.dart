@@ -38,8 +38,30 @@ class _SplashScreenState extends ConsumerState<SplashScreen> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            const Icon(Icons.schedule_rounded, size: 80, color: Colors.white),
-            const SizedBox(height: 16),
+            Container(
+              padding: const EdgeInsets.all(20),
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(28),
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.black.withOpacity(0.15),
+                    blurRadius: 20,
+                    offset: const Offset(0, 8),
+                  ),
+                ],
+              ),
+              child: ClipRRect(
+                borderRadius: BorderRadius.circular(16),
+                child: Image.asset(
+                  'assets/icon/app_icon.png',
+                  width: 80,
+                  height: 80,
+                  fit: BoxFit.contain,
+                ),
+              ),
+            ),
+            const SizedBox(height: 24),
             const Text(
               AppStrings.appName,
               style: TextStyle(
@@ -49,8 +71,20 @@ class _SplashScreenState extends ConsumerState<SplashScreen> {
                 letterSpacing: 1.2,
               ),
             ),
-            const SizedBox(height: 24),
-            const CircularProgressIndicator(color: Colors.white),
+            const SizedBox(height: 8),
+            const Text(
+              'Plan smarter, live better',
+              style: TextStyle(
+                color: Colors.white70,
+                fontSize: 14,
+              ),
+            ),
+            const SizedBox(height: 32),
+            const SizedBox(
+              width: 28,
+              height: 28,
+              child: CircularProgressIndicator(color: Colors.white, strokeWidth: 2.5),
+            ),
           ],
         ),
       ),
